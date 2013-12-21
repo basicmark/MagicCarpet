@@ -27,7 +27,7 @@ public class CarpetStorage implements Serializable {
 	private static final long serialVersionUID = 1675390921308149672L;
 
 	private class CarpetEntry implements Serializable {
-		private static final long serialVersionUID = -1720624757910521667L;
+		private static final long serialVersionUID = -1720624757910521668L;
 		
 		public transient Carpet carpet;
 		public boolean crouch = MagicCarpet.crouchDef;
@@ -36,6 +36,7 @@ public class CarpetStorage implements Serializable {
 		public Material light = MagicCarpet.lightMaterial;
 		public boolean lightsOn = MagicCarpet.glowCenter;
 		public Material thread = MagicCarpet.carpMaterial;
+		public byte threadData = MagicCarpet.carpData;
 		public boolean given = false;
 		public boolean tools = false;
 		public long time = MagicCarpet.chargeTime;
@@ -147,6 +148,7 @@ public class CarpetStorage implements Serializable {
 		entry.hasCarpet = entry.carpet.isVisible();
 		entry.lightsOn = entry.carpet.hasLight();
 		entry.thread = entry.carpet.getThread();
+		entry.threadData = entry.carpet.getThreadData();
 		entry.light = entry.carpet.getShine();
 		entry.tools = entry.carpet.hasTools();
 	}
@@ -206,6 +208,14 @@ public class CarpetStorage implements Serializable {
 		return entry.thread;
 	}
 
+	byte getMaterialData(Player player) {
+		CarpetEntry entry = getEntry(player);
+		if (entry == null) {
+			return MagicCarpet.carpData;
+		}
+		return entry.threadData;
+	}
+	
 	Material getLightMaterial(Player player) {
 		CarpetEntry entry = getEntry(player);
 		if (entry == null) {

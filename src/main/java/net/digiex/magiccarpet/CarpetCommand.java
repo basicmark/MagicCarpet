@@ -200,18 +200,29 @@ public class CarpetCommand implements CommandExecutor {
 				try {
 					c = Integer.valueOf(args[0]);
 				} catch (NumberFormatException e) {
-					String word = "";
+					String commanddata = "";
 					for (String a : args) {
-						if (word.isEmpty()) {
-							word = a;
+						if (commanddata.isEmpty()) {
+							commanddata = a;
 						} else {
-							word += " " + a;
+							commanddata += " " + a;
 						}
 					}
-					Material m = Material.getMaterial(word.toUpperCase()
+
+					String[] splitData = commanddata.split(":");
+					String material = splitData[0];
+					byte data = 0;
+					if (splitData.length == 2) {
+						try {
+							data = Byte.parseByte(splitData[1]);
+						} catch (NumberFormatException ee) {
+						}
+					}
+					
+					Material m = Material.getMaterial(material.toUpperCase()
 							.replace(" ", "_"));
 					if (m != null) {
-						carpet.changeCarpet(m);
+						carpet.changeCarpet(m, data);
 						return true;
 					} else {
 						player.sendMessage("Material error; Material may be entered as GOLD_BLOCK or just plain gold block");

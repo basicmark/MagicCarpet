@@ -38,6 +38,7 @@ import static org.bukkit.Material.SNOW_BLOCK;
 import static org.bukkit.Material.SOIL;
 import static org.bukkit.Material.SOUL_SAND;
 import static org.bukkit.Material.SPONGE;
+import static org.bukkit.Material.STAINED_GLASS;
 import static org.bukkit.Material.STONE;
 import static org.bukkit.Material.WOOD;
 import static org.bukkit.Material.WOOL;
@@ -94,7 +95,7 @@ public class MagicCarpet extends JavaPlugin {
 			BRICK, BOOKSHELF, MOSSY_COBBLESTONE, OBSIDIAN, DIAMOND_ORE,
 			DIAMOND_BLOCK, SOIL, SNOW_BLOCK, CLAY, PUMPKIN, NETHERRACK,
 			SOUL_SAND, MYCEL, NETHER_BRICK, ENDER_STONE, HUGE_MUSHROOM_1,
-			HUGE_MUSHROOM_2, MELON_BLOCK);
+			HUGE_MUSHROOM_2, MELON_BLOCK, STAINED_GLASS);
 	private static EnumSet<Material> acceptableLight = EnumSet.of(GLOWSTONE,
 			JACK_O_LANTERN);
 	private static CarpetStorage carpets = new CarpetStorage();
@@ -108,6 +109,7 @@ public class MagicCarpet extends JavaPlugin {
 	private Logger log;
 
 	static Material carpMaterial = GLASS;
+	static byte carpData = 0;
 	static int carpSize = 5;
 	static boolean crouchDef = true;
 	static boolean customCarpets = false;
@@ -360,6 +362,7 @@ public class MagicCarpet extends JavaPlugin {
 		config.set("center-light", glowCenter);
 		config.set("default-size", carpSize);
 		config.set("carpet-material", saveString(carpMaterial.name()));
+		config.set("carpet-data", carpData);
 		config.set("light-material", saveString(lightMaterial.name()));
 		config.set("max-size", maxCarpSize);
 		config.set("custom-carpets", customCarpets);
@@ -409,6 +412,7 @@ public class MagicCarpet extends JavaPlugin {
 			carpMaterial = GLASS;
 			log.warning("Config error; Invaild carpet material.");
 		}
+		carpData = (byte) config.getInt("carpet-data", 0);
 		lightMaterial = Material.getMaterial(loadString(config.getString(
 				"light-material", GLOWSTONE.name())));
 		if (lightMaterial == null) {

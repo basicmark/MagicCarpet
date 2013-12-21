@@ -46,6 +46,13 @@ public class Carpet {
 			bl.setType(material);
 			bl.setMetadata("Carpet", new FixedMetadataValue(plugin, carpet));
 		}
+		
+		@SuppressWarnings("deprecation")
+		void set(Block bl, Material material, Byte data) {
+			bl.setType(material);
+			bl.setData(data);
+			bl.setMetadata("Carpet", new FixedMetadataValue(plugin, carpet));
+		}
 
 		boolean shouldGlow() {
 			if (!light) {
@@ -111,9 +118,10 @@ public class Carpet {
 		int sz = MagicCarpet.getCarpets().getLastSize(player);
 		boolean light = MagicCarpet.getCarpets().hasLight(player);
 		Material thread = MagicCarpet.getCarpets().getMaterial(player);
+		byte threaddata = MagicCarpet.getCarpets().getMaterialData(player);
 		Material shine = MagicCarpet.getCarpets().getLightMaterial(player);
 		boolean tools = MagicCarpet.getCarpets().hasTools(player);
-		Carpet carpet = new Carpet(player, sz, light, thread, shine, tools);
+		Carpet carpet = new Carpet(player, sz, light, thread, threaddata, shine, tools);
 		MagicCarpet.getCarpets().assign(player, carpet);
 		return carpet;
 	}
@@ -123,15 +131,17 @@ public class Carpet {
 	private CarpetFibre[] fibres;
 	private boolean hidden, light, tools;
 	private Material thread, shine;
+	private byte threadData;
 	private Player who;
 
-	private Carpet(Player p, int s, boolean o, Material m, Material l, boolean t) {
+	private Carpet(Player p, int s, boolean o, Material m, byte d, Material l, boolean t) {
 		setSize(s);
 		who = p;
 		currentCentre = p.getLocation().getBlock();
 		light = o;
 		hidden = true;
 		thread = m;
+		threadData = d;
 		shine = l;
 		tools = t;
 	}
@@ -160,7 +170,7 @@ public class Carpet {
 				} else if (fibre.shouldWork()) {
 					fibre.set(bl, Material.WORKBENCH);
 				} else {
-					fibre.set(bl, thread);
+					fibre.set(bl, thread, threadData);
 				}
 			}
 	}
@@ -252,7 +262,7 @@ public class Carpet {
 		MagicCarpet.getCarpets().update(who);
 	}
 
-	public void changeCarpet(Material material) {
+	public void changeCarpet(Material material, byte data) {
 		if (!MagicCarpet.customCarpets) {
 			who.sendMessage("The carpet isn't allowed to change material.");
 			return;
@@ -263,6 +273,7 @@ public class Carpet {
 		}
 		removeCarpet();
 		thread = material;
+		threadData = data;
 		drawCarpet();
 		who.sendMessage("The carpet reacts to your words and suddenly changes!");
 		MagicCarpet.getCarpets().update(who);
@@ -292,6 +303,10 @@ public class Carpet {
 
 	public Material getThread() {
 		return thread;
+	}
+	
+	public byte getThreadData() {
+		return threadData;
 	}
 
 	public void hide() {
